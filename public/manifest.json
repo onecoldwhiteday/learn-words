@@ -1,0 +1,14 @@
+{
+    "name": "Learn Words",
+    "start_url": "/index.html",
+    "icons": [
+        {
+            "src": "/books.svg",
+            "type": "image/svg",
+            "purpose": "maskable"
+        }
+    ],
+    "display": "standalone",
+    "theme_color": "rebeccapurple",
+    "background_color": "#ffffff"
+}
