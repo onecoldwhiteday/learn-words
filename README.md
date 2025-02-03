@@ -1,7 +1,11 @@
 # Learn Words
 
-Данные полностью хранятся на твоём устройстве. 
-Интернет требуется только для добавления слов.
+To do: 
 
-Ничего лишнего.
-Просто запиши слова и возвращайся к ним, когда тебе надо.
+- [ ] setup PWA 
+- [ ] Add Settigns 
+  - [ ] Theme
+  - [ ] Import/export data
+  - [ ] Interface Language
+    - [ ] Add transltions
+- [ ] Check dictionalry for lang support and add select input language
