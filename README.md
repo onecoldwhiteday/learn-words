@@ -8,4 +8,7 @@ To do:
   - [ ] Import/export data
   - [ ] Interface Language
     - [ ] Add transltions
-- [ ] Check dictionalry for lang support and add select input language
+- [ ] Check dictionary for lang support and add select input language
+- [ ] Add detail card view
+  - [ ] Descktop: modal
+  - [ ] Touching device: fullscreen(?)
