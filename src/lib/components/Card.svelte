@@ -9,6 +9,8 @@
 
   let show = $state(true);
 
+  let cardRef = null;
+
   let currentWord = $state({ meanings: [], phonetic: "" });
   let loaded = $state(false);
 
@@ -65,16 +67,41 @@
       }, {});
     show = false;
   };
+
+  const handleMouseMove = (event) => {
+    if (!cardRef) return;
+    const x = event.clientX - cardRef.left;
+    const y = event.clientY - cardRef.top;
+
+    const xPercent = x / cardRef.width;
+    const yPercent = y / cardRef.height;
+
+    const xRotation = (0.5 - xPercent) * 20;
+    const yRotation = (0.5 - yPercent) * 20;
+
+    event.target.style.setProperty("--x-rotation", `${yRotation}deg`);
+    event.target.style.setProperty("--y-rotation", `${xRotation}deg`);
+    event.target.style.setProperty("--x", `${xPercent * 100}%`);
+    event.target.style.setProperty("--y", `${yPercent * 100}%`);
+  };
 </script>
 
 {#if show}
-  <li draggable="true" class={`word-card ${isTall() ? "tall" : ""}`}>
+  <!-- <li
+    class={`word-card ${isTall() ? "tall" : ""}`}
+    onmouseleave={() => (cardRef = null)}
+    onmouseenter={(ev) => (cardRef = ev.target.getBoundingClientRect())}
+    onmousemove={handleMouseMove}
+  > -->
+  <li class={`word-card ${isTall() ? "tall" : ""}`}>
     {#if loaded}
       <div class="card-header">
         <span class="title">{props.word}</span>
         <button class="close-btn" onclick={removeWord}>
           <img src={close} alt="close" />
         </button>
+        <div class="glare"></div>
+        <div class="pattern"></div>
       </div>
       {#if currentWord.phonetic}
         <span>{currentWord.phonetic}</span>
@@ -88,7 +115,7 @@
         </ol>
       {/if}
     {:else}
-      <span class="loader" />
+      <span class="loader"></span>
     {/if}
   </li>
 {/if}
@@ -107,6 +134,11 @@
     grid-row: span 2;
   }
   .word-card {
+    perspective: 800px;
+    position: relative;
+
+    border: 1px solid gray;
+
     .close-btn {
       width: 35px;
       height: 35px;
@@ -122,18 +154,21 @@
       background: none;
       border-radius: 50%;
       flex-shrink: 0;
-      /* filter: invert(); */
+      filter: invert();
     }
 
-    border: 1px solid #2c2c2c;
+    /* border: 1px solid #2c2c2c; */
     /* background-color: #ffd11d;
     color: #000; */
+
+    /* max-width: 380px; */
 
     list-style: none;
     font-size: 14px;
     border-radius: 32px;
     word-wrap: break-word;
     cursor: pointer;
+    /* border: 1px solid #2c2c2c; */
 
     display: flex;
     flex-direction: column;
@@ -145,11 +180,34 @@
       font-weight: 900;
       font-size: 32px;
     }
+  }
 
-    &:hover {
-      transform: rotate3d(0, 1, 0, -15deg);
-      transition: 0.5s ease-in-out;
-    }
+  .word-card:hover {
+    transition: all ease-out;
+    transform: rotateX(var(--x-rotation)) rotateY(var(--y-rotation)) scale(1.1);
+  }
+
+  .word-card:hover .glare {
+    background: radial-gradient(
+      at var(--x) var(--y),
+      rgba(255, 255, 255, 0.3) 20%,
+      transparent 80%
+    );
+  }
+
+  .glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 32px;
+  }
+
+  .pattern {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 23px;
+    opacity: 0.2;
   }
 
   .loader {

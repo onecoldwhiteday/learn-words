@@ -155,7 +155,7 @@
   .word-card-list {
     display: grid;
     grid-gap: 15px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
     grid-auto-rows: fit-content;
     grid-auto-flow: dense;
 
