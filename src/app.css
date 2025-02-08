@@ -81,7 +81,8 @@ button:focus-visible {
 [data-theme="dark"] {
   :root {
     color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+    /* background-color: #242424; */
+    background-color: #20948b;
   }
   a:hover {
     color: #646cff;
@@ -95,7 +96,8 @@ button:focus-visible {
 [data-theme="light"] {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
+    background-color: #20948b;
   }
 
   a:hover {

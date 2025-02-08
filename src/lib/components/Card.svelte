@@ -5,12 +5,10 @@
 
   import close from "../../assets/close.svg";
 
-  let props = $props();
+  let { onError, word, onRemoveWord, isOpen = false } = $props();
 
   let show = $state(true);
-
   let cardRef = null;
-
   let currentWord = $state({ meanings: [], phonetic: "" });
   let loaded = $state(false);
 
@@ -27,11 +25,10 @@
       { cache: "force-cache" }
     );
     if (wordFetch.status === 404) {
-      props.onError(
+      onError(
         `"${word}"? Never heard of it. Check spelling or whatever. Cheers!`
       );
       show = false;
-      // "No such word in the dictionary. Check spelling or whatever. Cheers!";
       return;
     }
 
@@ -43,8 +40,8 @@
   };
 
   onMount(() => {
-    if (props.word) {
-      loadWord(props.word);
+    if (word) {
+      loadWord(word);
     }
   });
 
@@ -55,51 +52,18 @@
       currentWord.meanings[0].definitions.length > 1
     );
   };
-
-  const removeWord = () => {
-    $wordData = Object.keys($wordData)
-      .filter((key) => key !== props.word.toLowerCase() && key !== props.word)
-      .reduce((obj, key) => {
-        return {
-          ...obj,
-          [key]: $wordData[key],
-        };
-      }, {});
-    show = false;
-  };
-
-  const handleMouseMove = (event) => {
-    if (!cardRef) return;
-    const x = event.clientX - cardRef.left;
-    const y = event.clientY - cardRef.top;
-
-    const xPercent = x / cardRef.width;
-    const yPercent = y / cardRef.height;
-
-    const xRotation = (0.5 - xPercent) * 20;
-    const yRotation = (0.5 - yPercent) * 20;
-
-    event.target.style.setProperty("--x-rotation", `${yRotation}deg`);
-    event.target.style.setProperty("--y-rotation", `${xRotation}deg`);
-    event.target.style.setProperty("--x", `${xPercent * 100}%`);
-    event.target.style.setProperty("--y", `${yPercent * 100}%`);
-  };
 </script>
 
 {#if show}
-  <!-- <li
-    class={`word-card ${isTall() ? "tall" : ""}`}
-    onmouseleave={() => (cardRef = null)}
-    onmouseenter={(ev) => (cardRef = ev.target.getBoundingClientRect())}
-    onmousemove={handleMouseMove}
-  > -->
   <li class={`word-card ${isTall() ? "tall" : ""}`}>
     {#if loaded}
       <div class="card-header">
-        <span class="title">{props.word}</span>
-        <button class="close-btn" onclick={removeWord}>
-          <img src={close} alt="close" />
-        </button>
+        <span class="title">{word}</span>
+        <div class="card-actions-container">
+          <button class="close-btn" onclick={() => onRemoveWord(word)}>
+            <img src={close} alt="close" />
+          </button>
+        </div>
         <div class="glare"></div>
         <div class="pattern"></div>
       </div>
@@ -109,7 +73,7 @@
 
       {#if currentWord.meanings?.length}
         <ol class="meaning-list">
-          {#each props.isOpen ? [...currentWord.meanings] : [currentWord.meanings[0]] as meaning}
+          {#each isOpen ? [...currentWord.meanings] : [currentWord.meanings[0]] as meaning}
             <WordMeaning {meaning} />
           {/each}
         </ol>
@@ -128,6 +92,11 @@
   .meaning-list {
     padding-left: 0;
     margin-left: 0;
+  }
+
+  .card-actions-container {
+    display: flex;
+    gap: 8px;
   }
 
   .tall {

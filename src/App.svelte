@@ -4,6 +4,7 @@
   import Card from "./lib/components/Card.svelte";
   import Toast from "./lib/components/Toast.svelte";
   import { wordData } from "./store";
+  import CardList from "./lib/components/CardList.svelte";
 
   const segmenter = new Intl.Segmenter([], { granularity: "word" });
 
@@ -30,9 +31,10 @@
     let result = [];
     if (!input) return savedWords;
 
-    result = savedWords.filter(
-      (w) => w.includes(input.toLowerCase()) || input.includes(w.toLowerCase())
-    );
+    // TODO: add proper filter
+    // result = savedWords.filter(
+    //   (w) => w.includes(input.toLowerCase()) || input.includes(w.toLowerCase())
+    // );
 
     if (!result.length) {
       return savedWords;
@@ -51,13 +53,32 @@
     return;
   };
 
+  const flushMsgs = () => {
+    errors = [];
+  };
+
+  const removeWord = (word) => {
+    $wordData = Object.keys($wordData)
+      .filter((key) => key !== word.toLowerCase() && key !== word)
+      .reduce((obj, key) => {
+        return {
+          ...obj,
+          [key]: $wordData[key],
+        };
+      }, {});
+  };
+
   const handleError = (errorMsg) => {
-    errors.push(errorMsg);
+    errors.push({ text: errorMsg, type: "error" });
+  };
+
+  const hideError = (id) => {
+    errors = errors.filter((e, i) => i !== id);
   };
 </script>
 
 <main class="main-container">
-  <h1 style="font-weight: 900">{$t("main.title")}</h1>
+  <h1 style="font-weight: 900">{$t("main.title")} ✨</h1>
   <input
     type="text"
     class="word-input"
@@ -83,14 +104,8 @@
       </ul>
     </div>
   {/if}
-  {#if renderedWords.length}
-    <ul class="word-card-list">
-      {#each renderedWords as savedWord}
-        <Card word={savedWord} onError={handleError} isOpen={false} />
-      {/each}
-    </ul>
-  {/if}
-  <Toast {errors} />
+  <CardList worldList={renderedWords} {handleError} onRemoveWord={removeWord} />
+  <Toast msgs={errors} hideMsg={hideError} />
 </main>
 
 <style>
@@ -99,13 +114,6 @@
     flex-direction: column;
     gap: 8px;
     padding: 24px;
-  }
-
-  .word-button-help-text {
-    display: inline-block;
-    word-wrap: break-word;
-    max-width: 500px;
-    padding: 20px;
   }
 
   .main-container {
@@ -149,18 +157,5 @@
     border-radius: 8px;
     width: fit-content;
     cursor: pointer;
-    padding: 1rem;
-  }
-
-  .word-card-list {
-    display: grid;
-    grid-gap: 15px;
-    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    grid-auto-rows: fit-content;
-    grid-auto-flow: dense;
-
-    margin: 0 auto;
-    width: 80%;
-    padding: 24px;
   }
 </style>
