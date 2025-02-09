@@ -1,13 +1,24 @@
 <script>
   import Card from "./Card.svelte";
+  import {wordData} from "../stores/store.js";
+  import {flip, slide} from "svelte/animate";
 
-  const { worldList, onRemoveWord } = $props();
+  let {wordList, onFailToLoadWord} = $props();
+
+  const removeWord = (/** @type string */ word) => {
+    let newWordList= {...$wordData};
+    delete newWordList[word.toLowerCase()];
+    $wordData = newWordList;
+  }
+
 </script>
 
-{#if worldList.length}
+{#if wordList?.length}
   <ul class="word-card-list">
-    {#each worldList as word}
-      <Card {word} {onRemoveWord} isOpen={false} />
+    {#each wordList as word (word)}
+      <li class="word-card-list__item" out:slide animate:flip={{duration: 400}}>
+      <Card {word} {removeWord} {onFailToLoadWord} isOpen={false} />
+      </li>
     {/each}
   </ul>
 {/if}
@@ -17,11 +28,13 @@
     display: grid;
     grid-gap: 15px;
     grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-    grid-auto-rows: fit-content;
     grid-auto-flow: dense;
 
     margin: 0 auto;
     width: 80%;
     padding: 24px;
+  }
+  .word-card-list__item {
+    list-style: none;
   }
 </style>

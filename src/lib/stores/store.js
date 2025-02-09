@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import LZString from 'lz-string';
+import LZString from 'lz-string'; // For compression
 
 const mainStore = (name, initialValue, toStorage = [], fromStorage = []) => {
     if (window.localStorage) {
@@ -10,10 +10,24 @@ const mainStore = (name, initialValue, toStorage = [], fromStorage = []) => {
         }
     }
 
-    const { subscribe, set } = writable(initialValue);
+    const { subscribe, update, set } = writable(initialValue);
+
+    function keep(wordData) {
+        update(n => ({[wordData.word]: wordData, ...n}));
+    }
+
+    function remove(word) {
+        update(n => {
+            let newWordList= {...n};
+            delete newWordList[word.toLowerCase()];
+            return newWordList;
+        })
+    }
 
     return {
         subscribe,
+        keep,
+        remove,
         set: (x) => {
             if (window?.localStorage) {
                 window.localStorage.setItem(name, toStorage.reduce((acc, fn) => fn(acc), x))

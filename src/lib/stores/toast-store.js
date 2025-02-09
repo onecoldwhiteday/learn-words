@@ -4,12 +4,11 @@ const defaults = {
     duration: 3000,
     initial: 1,
     next: 0,
-    dismissable: true,
     type: 'error',
-    reversed: false,
-    intro: { x: 256 }
 }
 
+
+// TODO: refactor this mess
 function createToast() {
     const { subscribe, update } = writable(new Array());
     const options = {}
@@ -44,6 +43,7 @@ function createToast() {
         update(n => [entry, ...n])
         return count;
     }
+
     function pop(id) {
         update((n) => {
             if (!n.length || id === 0) return []

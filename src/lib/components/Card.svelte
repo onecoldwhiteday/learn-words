@@ -4,19 +4,28 @@
   import { wordData } from "../stores/store";
   import close from "../../assets/close.svg";
   import { toast } from "../stores/toast-store";
+  import {slide} from "svelte/transition";
 
-  let { word, onRemoveWord, isOpen = false } = $props();
+  let { word, removeWord, onFailToLoadWord, isOpen = false } = $props();
+
+  let currentWord = $state({ meanings: [], phonetic: "" });
 
   let show = $state(true);
-  let cardRef = null;
-  let currentWord = $state({ meanings: [], phonetic: "" });
   let loaded = $state(false);
+  let folded = $state(false);
+  let cardRef;
+
+  onMount(async () => {
+    if (word) {
+      console.log(word);
+      await loadWord(word);
+    }
+  });
 
   const loadWord = async (word) => {
     if ($wordData[word.toLowerCase()]) {
       currentWord = $wordData[word.toLowerCase()];
       loaded = true;
-
       return;
     }
 
@@ -29,44 +38,44 @@
         `"${word}"? Never heard of it. Check spelling or whatever. Cheers!`
       );
       show = false;
-      return;
+      return onFailToLoadWord();
     }
 
     let wordResponse = await wordFetch.json();
-    currentWord = wordResponse[0];
-    $wordData[word] = currentWord;
+
+    $wordData = ({[word.toLowerCase()]: wordResponse[0], ...$wordData});
+    currentWord = $wordData[word.toLowerCase()];
+
     loaded = true;
     return wordData;
   };
 
-  onMount(() => {
-    if (word) {
-      loadWord(word);
-    }
-  });
 
-  const isTall = () => {
-    return (
-      currentWord.meanings?.length > 1 &&
-      currentWord.meanings[0].definitions.length &&
-      currentWord.meanings[0].definitions.length > 1
-    );
+  let isTall = () => {
+    return currentWord.meanings?.length > 1 &&
+      currentWord.meanings[0]?.definitions.length &&
+      currentWord.meanings[0]?.definitions.length > 1
   };
 </script>
 
 {#if show}
-  <li class={`word-card ${isTall() ? "tall" : ""}`}>
+  <div bind:this={cardRef}
+      in:slide
+      out:slide
+      class={`word-card ${folded ? 'folded' : ''} ${isTall() ? "tall" : ""}`}>
     {#if loaded}
       <div class="card-header">
         <span class="title">{word}</span>
         <div class="card-actions-container">
-          <button class="close-btn" onclick={() => onRemoveWord(word)}>
-            <img src={close} alt="close" />
+          <button class='close-btn' onclick={() => folded = !folded}>
+            <span style="font-size: 32px; height: 2px; width: 20px; place-self: center; background-color: black; flex-shrink: 0"></span>
+          </button>
+          <button class="close-btn" onclick={() => removeWord(word)}>
+            <img src={close} alt="minimize" />
           </button>
         </div>
-        <div class="glare"></div>
-        <div class="pattern"></div>
       </div>
+      {#if !folded}
       {#if currentWord.phonetic}
         <span>{currentWord.phonetic}</span>
       {/if}
@@ -78,10 +87,11 @@
           {/each}
         </ol>
       {/if}
+        {/if}
     {:else}
       <span class="loader"></span>
     {/if}
-  </li>
+  </div>
 {/if}
 
 <style>
@@ -102,11 +112,17 @@
   .tall {
     grid-row: span 2;
   }
+
   .word-card {
     perspective: 800px;
     position: relative;
+    box-sizing: border-box;
 
     border: 1px solid gray;
+
+    &.folded {
+      max-height: 100px;
+    }
 
     .close-btn {
       width: 35px;
@@ -149,34 +165,6 @@
       font-weight: 900;
       font-size: 32px;
     }
-  }
-
-  .word-card:hover {
-    transition: all ease-out;
-    transform: rotateX(var(--x-rotation)) rotateY(var(--y-rotation)) scale(1.1);
-  }
-
-  .word-card:hover .glare {
-    background: radial-gradient(
-      at var(--x) var(--y),
-      rgba(255, 255, 255, 0.3) 20%,
-      transparent 80%
-    );
-  }
-
-  .glare {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    border-radius: 32px;
-  }
-
-  .pattern {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    border-radius: 23px;
-    opacity: 0.2;
   }
 
   .loader {

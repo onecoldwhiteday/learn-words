@@ -1,5 +1,4 @@
 <script>
-  import { onDestroy, onMount } from "svelte";
   import { linear } from "svelte/easing";
   import { tweened } from "svelte/motion";
   import { toast } from "../stores/toast-store";
@@ -41,10 +40,6 @@
     duration: item.duration,
     easing: linear,
   });
-
-  onDestroy(() => {
-    item.onpop && item.onpop(item.id, { event });
-  });
 </script>
 
 <div
@@ -66,8 +61,6 @@
     padding: 32px;
     word-wrap: break-word;
     border-radius: 32px;
-    animation: fade-in 0.3s ease-out;
-    transition-behavior: allow-discrete;
 
     color: #fff;
   }
