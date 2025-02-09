@@ -1,68 +1,67 @@
 <script>
-  let { msgs, hideMsg } = $props();
+  import { onDestroy, onMount } from "svelte";
+  import { linear } from "svelte/easing";
+  import { tweened } from "svelte/motion";
+  import { toast } from "../stores/toast-store";
 
-  window.onkeydown = (event) => hideMsgsByKeyboard(event);
-  const hideMsgsByKeyboard = (event) => {
-    if (event.keyCode === 27) {
-      flushMsgs();
-    }
-  };
+  let { item } = $props();
 
-  const flushMsgs = () => {
-    msgs.forEach((m, i) => console.log(m, i));
-  };
+  let next = item.initial;
+  let prev = next;
+  let paused = false;
+  let cprops = {};
+  let event;
 
-  const handleRemoval = (event, i) => {
-    const newspaperSpinning = [
-      { transform: "translateX(0)" },
-      { transform: "translateX(250%)" },
-      { display: "none" },
-    ];
-    event.target.animate(newspaperSpinning, {
-      duration: 400,
-      iterations: 1,
-    });
-    setTimeout(() => {
-      hideMsg(i, event.target);
-    }, 550);
-
-    // event.target.onanimationend();
-  };
-</script>
-
-{#if msgs?.length}
-  <div class="msg-container">
-    {#each msgs as msg, i}
-      <!-- key event handler added by svelte suggestion, it actually doesn't work here -->
-      <div
-        class={`msg ${msg.type}`}
-        role="button"
-        tabindex={i}
-        onkeydown={hideMsgsByKeyboard}
-        onclick={(event) => handleRemoval(event, i)}
-      >
-        {msg.text}
-      </div>
-    {/each}
-  </div>
-{/if}
-
-<style>
-  .msg-container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 32px;
-    right: 32px;
-
-    cursor: pointer;
-
-    gap: 8px;
-    /* width: 500px; */
-    min-width: 150px;
-    height: fit-content;
+  function close(ev) {
+    if (ev) event = ev;
+    toast.pop(item.id);
   }
 
+  $effect(() => {
+    if (next !== item.next) {
+      next = item.next;
+      prev = $progress;
+      paused = false;
+      progress.set(next).then(autoclose);
+    }
+  });
+
+  $effect(() => {
+    if (item.component) {
+      const { props = {}, sendIdTo } = item.component;
+      cprops = { ...props, ...(sendIdTo && { [sendIdTo]: item.id }) };
+    }
+  });
+
+  function autoclose() {
+    if ($progress === 1 || $progress === 0) close();
+  }
+
+  const progress = tweened(item.initial, {
+    duration: item.duration,
+    easing: linear,
+  });
+
+  onDestroy(() => {
+    item.onpop && item.onpop(item.id, { event });
+  });
+</script>
+
+<div
+  class={`msg ${item.type}`}
+  role="button"
+  tabindex="0"
+  onclick={(ev) => close(ev)}
+  onkeydown={(ev) => {
+    if (ev instanceof KeyboardEvent && ["Enter", " "].includes(ev.key))
+      close(ev);
+  }}
+  id={item.id}
+>
+  {@html item.msg}
+</div>
+
+<style>
   .msg {
     padding: 32px;
     word-wrap: break-word;
@@ -79,38 +78,5 @@
 
   .success {
     background-color: #68a52a;
-  }
-
-  @media screen and (max-width: 750px) {
-    .error-container {
-      margin: 0 auto;
-      place-self: center;
-      right: auto;
-    }
-  }
-
-  @keyframes fade-in {
-    0% {
-      opacity: 0;
-      transform: translateY(-250%);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-      display: block;
-    }
-  }
-
-  @keyframes fade-out {
-    0% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    100% {
-      opacity: 0;
-      transform: translateY(-250%);
-    }
   }
 </style>

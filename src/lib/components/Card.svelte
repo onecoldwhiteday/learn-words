@@ -1,11 +1,11 @@
 <script>
   import { onMount } from "svelte";
   import WordMeaning from "./WordMeaning.svelte";
-  import { wordData } from "../../store";
-
+  import { wordData } from "../stores/store";
   import close from "../../assets/close.svg";
+  import { toast } from "../stores/toast-store";
 
-  let { onError, word, onRemoveWord, isOpen = false } = $props();
+  let { word, onRemoveWord, isOpen = false } = $props();
 
   let show = $state(true);
   let cardRef = null;
@@ -25,7 +25,7 @@
       { cache: "force-cache" }
     );
     if (wordFetch.status === 404) {
-      onError(
+      toast.push(
         `"${word}"? Never heard of it. Check spelling or whatever. Cheers!`
       );
       show = false;

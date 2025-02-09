@@ -12,3 +12,4 @@ To do:
 - [ ] Add detail card view
   - [ ] Descktop: modal
   - [ ] Touching device: fullscreen(?)
+- [x] Add notification system

@@ -2,14 +2,13 @@
   import { onMount } from "svelte";
   import { t, locale, locales } from "./i18n";
   import Card from "./lib/components/Card.svelte";
-  import Toast from "./lib/components/Toast.svelte";
-  import { wordData } from "./store";
+  import Toast from "./lib/components/ToastContainer.svelte";
+  import { wordData } from "./lib/stores/store";
   import CardList from "./lib/components/CardList.svelte";
+  import ToastContainer from "./lib/components/ToastContainer.svelte";
+  import { slide } from "svelte/transition";
 
   const segmenter = new Intl.Segmenter([], { granularity: "word" });
-
-  // Manage errors
-  let errors = $state([]);
 
   // Controlled text input value
   let input = $state("");
@@ -28,18 +27,19 @@
 
   // Words we show after checking if input contains any of them, if not - show all.
   let renderedWords = $derived.by(() => {
-    let result = [];
-    if (!input) return savedWords;
+    // let result = [];
+    // if (!input) return savedWords;
 
     // TODO: add proper filter
     // result = savedWords.filter(
     //   (w) => w.includes(input.toLowerCase()) || input.includes(w.toLowerCase())
     // );
 
-    if (!result.length) {
-      return savedWords;
-    }
-    return result;
+    // if (!result.length) {
+    //   return savedWords;
+    // }
+    // return result;
+    return savedWords;
   });
 
   // Action on Card Template click, make actual card from template
@@ -53,10 +53,6 @@
     return;
   };
 
-  const flushMsgs = () => {
-    errors = [];
-  };
-
   const removeWord = (word) => {
     $wordData = Object.keys($wordData)
       .filter((key) => key !== word.toLowerCase() && key !== word)
@@ -66,14 +62,7 @@
           [key]: $wordData[key],
         };
       }, {});
-  };
-
-  const handleError = (errorMsg) => {
-    errors.push({ text: errorMsg, type: "error" });
-  };
-
-  const hideError = (id) => {
-    errors = errors.filter((e, i) => i !== id);
+    savedWords = Object.keys($wordData);
   };
 </script>
 
@@ -86,7 +75,7 @@
     placeholder={$t("input.placeholder")}
   />
   {#if cardTemplates.length}
-    <div class="word-button-list-container">
+    <div class="word-button-list-container" in:slide out:slide>
       <span>
         Tap or click on a(each) word to create and save as memo card. Make sure
         you have an internet connection for that.
@@ -104,8 +93,8 @@
       </ul>
     </div>
   {/if}
-  <CardList worldList={renderedWords} {handleError} onRemoveWord={removeWord} />
-  <Toast msgs={errors} hideMsg={hideError} />
+  <CardList worldList={savedWords} onRemoveWord={removeWord} />
+  <ToastContainer />
 </main>
 
 <style>
@@ -113,7 +102,9 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 24px;
+    /* padding: 24px; */
+    /* height: 0; */
+    padding-top: 24px;
   }
 
   .main-container {
@@ -126,6 +117,8 @@
     align-items: center;
     margin: 0 auto;
     text-align: center;
+
+    background: none;
   }
   .word-input {
     max-width: 50%;
@@ -149,10 +142,15 @@
   .word-container {
     list-style: none;
     padding: 0;
+
+    & button {
+      padding: 0 1rem !important;
+      background: none;
+    }
   }
 
   .word-button {
-    border: 2px dashed #2c2c2c;
+    border: 2px dashed gray;
     font-size: 24px;
     border-radius: 8px;
     width: fit-content;

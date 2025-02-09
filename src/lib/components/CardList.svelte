@@ -1,14 +1,13 @@
 <script>
-  import { wordData } from "../../store";
   import Card from "./Card.svelte";
 
-  const { handleError, worldList, onRemoveWord } = $props();
+  const { worldList, onRemoveWord } = $props();
 </script>
 
 {#if worldList.length}
   <ul class="word-card-list">
     {#each worldList as word}
-      <Card {word} onError={handleError} {onRemoveWord} isOpen={false} />
+      <Card {word} {onRemoveWord} isOpen={false} />
     {/each}
   </ul>
 {/if}
