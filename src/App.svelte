@@ -5,15 +5,18 @@
   import CardList from "./lib/components/CardList.svelte";
   import { slide } from "svelte/transition";
   import WordSuggestList from "./lib/components/WordSuggestList.svelte";
+  import WordInput from "./lib/components/WordInput.svelte";
 
   const segmenter = new Intl.Segmenter([], { granularity: "word" });
 
   // Controlled text input value
-  let input = $state("");
+  let input = $state({
+    value: ''
+  });
 
   // Card templates, made from input
   let cardTemplates = $derived.by(() => {
-    const segmentedText = segmenter.segment(input);
+    const segmentedText = segmenter.segment(input.value);
     let prep = [...segmentedText]
       .filter((s) => s.isWordLike)
       .map((s) => s.segment);
@@ -30,7 +33,7 @@
   // Action on Card Template click, make actual card from template
   const addWord = (/** @type string */ word) => {
     // Remove saved word
-    input = [...cardTemplates.filter((w) => w !== word)].join(" ");
+    input.value = [...cardTemplates.filter((w) => w !== word)].join(" ");
 
     // Save word to make a card
     if (!wordList.includes(word.toLowerCase())) {
@@ -41,12 +44,7 @@
 
 <main class="main-container">
   <h1 style="font-weight: 900">{$t("main.title")} ✨</h1>
-  <input
-    type="text"
-    class="word-input"
-    bind:value={input}
-    placeholder={$t("input.placeholder")}
-  />
+  <WordInput bind:input={input}  />
   <WordSuggestList
           addWord={addWord}
           cardSuggestions={cardTemplates} />
@@ -67,14 +65,5 @@
     text-align: center;
 
     background: none;
-  }
-  .word-input {
-    max-width: 50%;
-    font-size: 20px;
-    width: 100%;
-    padding: 24px;
-    border-radius: 40px;
-    min-width: 255px;
-    outline: none;
   }
 </style>

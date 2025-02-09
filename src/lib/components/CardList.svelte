@@ -1,7 +1,9 @@
 <script>
   import Card from "./Card.svelte";
   import {wordData} from "../stores/store.js";
-  import {flip, slide} from "svelte/animate";
+  import {flip} from "svelte/animate";
+  import { slide } from "svelte/transition";
+
 
   let {wordList, onFailToLoadWord} = $props();
 
@@ -16,7 +18,7 @@
 {#if wordList?.length}
   <ul class="word-card-list">
     {#each wordList as word (word)}
-      <li class="word-card-list__item" out:slide animate:flip={{duration: 400}}>
+      <li class="word-card-list__item" out:slide in:slide animate:flip={{duration: 400}}>
       <Card {word} {removeWord} {onFailToLoadWord} isOpen={false} />
       </li>
     {/each}
