@@ -68,7 +68,7 @@
         <span class="title">{word}</span>
         <div class="card-actions-container">
           <button class='close-btn' onclick={() => folded = !folded}>
-            <span style="font-size: 32px; height: 2px; width: 20px; place-self: center; background-color: black; flex-shrink: 0"></span>
+             <span class="minimize-icon"></span>
           </button>
           <button class="close-btn" onclick={() => removeWord(word)}>
             <img src={close} alt="minimize" />
@@ -142,9 +142,18 @@
       filter: invert();
     }
 
+    .minimize-icon {
+      font-size: 32px;
+      height: 2px;
+      width: 20px;
+      place-self: center;
+      background-color: black;
+      flex-shrink: 0;
+    }
+
     /* border: 1px solid #2c2c2c; */
-    /* background-color: #ffd11d;
-    color: #000; */
+    background-color: inherit;
+    /*color: #000;*/
 
     /* max-width: 380px; */
 

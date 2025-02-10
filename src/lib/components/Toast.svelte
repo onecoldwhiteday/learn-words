@@ -70,6 +70,6 @@
   }
 
   .success {
-    background-color: #68a52a;
+    background-color: #355515;
   }
 </style>

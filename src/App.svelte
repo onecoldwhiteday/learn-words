@@ -6,6 +6,7 @@
   import { slide } from "svelte/transition";
   import WordSuggestList from "./lib/components/WordSuggestList.svelte";
   import WordInput from "./lib/components/WordInput.svelte";
+  import {toast} from "./lib/stores/toast-store.js";
 
   const segmenter = new Intl.Segmenter([], { granularity: "word" });
 
@@ -37,14 +38,25 @@
 
     // Save word to make a card
     if (!wordList.includes(word.toLowerCase())) {
-      wordList = [word, ...wordList]
+      wordList = [word, ...wordList];
+      return;
     }
+
+    toast.push(`The word "${word}" is already here!  🌱`, {type: 'success' })
   };
+
+  const bulkAddWords = (event) => {
+    if (event.key === "Enter") {
+    for (let w of cardTemplates) {
+      addWord(w);
+    }
+    }
+  }
 </script>
 
 <main class="main-container">
   <h1 style="font-weight: 900">{$t("main.title")} ✨</h1>
-  <WordInput bind:input={input}  />
+  <WordInput bind:input={input} bulkAdd={bulkAddWords} />
   <WordSuggestList
           addWord={addWord}
           cardSuggestions={cardTemplates} />

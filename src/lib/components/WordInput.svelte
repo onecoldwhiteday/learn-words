@@ -1,13 +1,14 @@
 <script>
   import { t } from "../../i18n.js";
 
-  const { input = $bindable() } = $props();
+  const { input = $bindable(), bulkAdd } = $props();
 </script>
 
 <input
   type="text"
   class="word-input"
   bind:value={input.value}
+  onkeydown={bulkAdd}
   placeholder={$t("input.placeholder")}
 />
 
@@ -20,5 +21,6 @@
     border-radius: 40px;
     min-width: 255px;
     outline: none;
+      background: none;
   }
 </style>
