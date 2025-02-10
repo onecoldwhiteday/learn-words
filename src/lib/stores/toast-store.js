@@ -1,22 +1,16 @@
 import { writable } from "svelte/store";
 
 const defaults = {
-    duration: 3000,
+    duration: 4000,
     initial: 1,
     next: 0,
     type: 'error',
 }
 
-
-// TODO: refactor this mess
 function createToast() {
-    const { subscribe, update } = writable(new Array());
+    const { subscribe, update } = writable([]);
     const options = {}
     let count = 0
-
-    function isObj(obj) {
-        return obj instanceof Object
-    }
 
     function init(target = 'default', opts = {}) {
         options[target] = opts
@@ -46,12 +40,10 @@ function createToast() {
 
     function pop(id) {
         update((n) => {
-            if (!n.length || id === 0) return []
+            if (!n.length || id === 0) return [];
 
-            if (isObj(id))
-                return n.filter((i) => i.target !== id.target)
-            const found = id || Math.max(...n.map((i) => i.id))
-            return n.filter((i) => i.id !== found)
+            const found = id || Math.max(...n.map((i) => i.id));
+            return n.filter((i) => i.id !== found);
         })
     }
 

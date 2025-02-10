@@ -5,6 +5,7 @@
   import close from "../../assets/close.svg";
   import { toast } from "../stores/toast-store";
   import {slide} from "svelte/transition";
+  import {flip} from "svelte/animate";
 
   let { word, removeWord, onFailToLoadWord, isOpen = false } = $props();
 
@@ -76,6 +77,7 @@
         </div>
       </div>
       {#if !folded}
+        <div in:slide out:slide>
       {#if currentWord.phonetic}
         <span>{currentWord.phonetic}</span>
       {/if}
@@ -87,6 +89,7 @@
           {/each}
         </ol>
       {/if}
+        </div>
         {/if}
     {:else}
       <span class="loader"></span>
@@ -122,6 +125,8 @@
 
     &.folded {
       max-height: 100px;
+      height: 100px;
+
     }
 
     .close-btn {
@@ -151,18 +156,13 @@
       flex-shrink: 0;
     }
 
-    /* border: 1px solid #2c2c2c; */
     background-color: inherit;
-    /*color: #000;*/
-
-    /* max-width: 380px; */
 
     list-style: none;
     font-size: 14px;
     border-radius: 32px;
     word-wrap: break-word;
     cursor: pointer;
-    /* border: 1px solid #2c2c2c; */
 
     display: flex;
     flex-direction: column;
