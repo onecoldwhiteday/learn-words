@@ -1,24 +1,22 @@
 <script>
   import Card from "./Card.svelte";
-  import {wordData} from "../stores/store.js";
-  import {flip} from "svelte/animate";
+  import { wordData } from "../stores/store.js";
+  import { flip } from "svelte/animate";
 
-
-  let {wordList, onFailToLoadWord} = $props();
+  let { wordList, onFailToLoadWord } = $props();
 
   const removeWord = (/** @type string */ word) => {
-    let newWordList= {...$wordData};
+    let newWordList = { ...$wordData };
     delete newWordList[word.toLowerCase()];
     $wordData = newWordList;
-  }
-
+  };
 </script>
 
 {#if wordList?.length}
   <ul class="word-card-list">
     {#each wordList as word (word)}
-      <li class="word-card-list__item" animate:flip={{duration: 400}}>
-      <Card {word} {removeWord} {onFailToLoadWord} isOpen={false} />
+      <li class="word-card-list__item" animate:flip={{ duration: 400 }}>
+        <Card {word} {removeWord} {onFailToLoadWord} isOpen={false} />
       </li>
     {/each}
   </ul>

@@ -25,7 +25,6 @@
     border-radius: 32px;
 
     &:hover {
-      /* background-color: #303134; */
       border: 1px solid #3c4043;
     }
   }

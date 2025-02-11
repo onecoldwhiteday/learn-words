@@ -46,7 +46,6 @@
     cursor: pointer;
 
     gap: 8px;
-    /* width: 500px; */
     min-width: 150px;
     height: fit-content;
   }

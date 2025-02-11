@@ -4,8 +4,8 @@
   import { wordData } from "../stores/store";
   import close from "../../assets/close.svg";
   import { toast } from "../stores/toast-store";
-  import {slide} from "svelte/transition";
-  import {flip} from "svelte/animate";
+  import { slide } from "svelte/transition";
+  import { flip } from "svelte/animate";
 
   let { word, removeWord, onFailToLoadWord, isOpen = false } = $props();
 
@@ -44,32 +44,39 @@
 
     let wordResponse = await wordFetch.json();
 
-    $wordData = ({[word.toLowerCase()]: wordResponse[0], ...$wordData});
+    $wordData = { [word.toLowerCase()]: wordResponse[0], ...$wordData };
     currentWord = $wordData[word.toLowerCase()];
 
     loaded = true;
     return wordData;
   };
 
-
   let isTall = () => {
-    return currentWord.meanings?.length > 1 &&
+    return (
+      currentWord.meanings?.length > 1 &&
       currentWord.meanings[0]?.definitions.length &&
       currentWord.meanings[0]?.definitions.length > 1
+    );
   };
 </script>
 
 {#if show}
-  <div bind:this={cardRef}
-      in:slide
-      out:slide
-      class={`word-card ${folded ? 'folded' : ''} ${isTall() ? "tall" : ""}`}>
+  <div
+    bind:this={cardRef}
+    in:slide
+    out:slide
+    class={`word-card ${folded ? "folded" : ""} ${isTall() ? "tall" : ""}`}
+  >
     {#if loaded}
       <div class="card-header">
         <span class="title">{word}</span>
         <div class="card-actions-container">
-          <button class='close-btn' onclick={() => folded = !folded}>
-             <span class="minimize-icon"></span>
+          <button
+            aria-label="fold_button"
+            class="close-btn"
+            onclick={() => (folded = !folded)}
+          >
+            <span class="minimize-icon"></span>
           </button>
           <button class="close-btn" onclick={() => removeWord(word)}>
             <img src={close} alt="minimize" />
@@ -78,19 +85,19 @@
       </div>
       {#if !folded}
         <div in:slide out:slide>
-      {#if currentWord.phonetic}
-        <span>{currentWord.phonetic}</span>
-      {/if}
+          {#if currentWord.phonetic}
+            <span>{currentWord.phonetic}</span>
+          {/if}
 
-      {#if currentWord.meanings?.length}
-        <ol class="meaning-list">
-          {#each isOpen ? [...currentWord.meanings] : [currentWord.meanings[0]] as meaning}
-            <WordMeaning {meaning} />
-          {/each}
-        </ol>
-      {/if}
+          {#if currentWord.meanings?.length}
+            <ol class="meaning-list">
+              {#each isOpen ? [...currentWord.meanings] : [currentWord.meanings[0]] as meaning}
+                <WordMeaning {meaning} />
+              {/each}
+            </ol>
+          {/if}
         </div>
-        {/if}
+      {/if}
     {:else}
       <span class="loader"></span>
     {/if}
@@ -126,7 +133,6 @@
     &.folded {
       max-height: 100px;
       height: 100px;
-
     }
 
     .close-btn {
