@@ -9,6 +9,7 @@ To do:
   - [ ] Interface Language
     - [ ] Add transltions
 - [ ] Check dictionary for lang support and add select input language
+- [ ] Add Fauvorite Cards
 - [ ] Add detail card view
   - [ ] Descktop: modal
   - [ ] Touching device: fullscreen(?)
