@@ -54,6 +54,7 @@
 
 <header class="main-header"></header>
 <main class="main-container">
+  <h1 class="main-title">Word Cards</h1>
   <WordInput bind:input bulkAdd={bulkAddWords} />
   <WordSuggestList {addWord} cardSuggestions={cardTemplates} />
   <CardList
@@ -72,6 +73,10 @@
     display: flex;
     justify-content: flex-end;
     color: var(--text);
+  }
+
+  .main-title {
+    font-weight: 100;
   }
 
   .main-container {

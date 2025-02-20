@@ -12,17 +12,21 @@
     onkeydown={bulkAdd}
     placeholder={$t("input.placeholder")}
   />
-  <button id="submit-btn" type="button" onclick={bulkAdd}>save all</button>
+  <button id="submit-btn" type="button" onclick={bulkAdd}>save all </button>
 </div>
 
 <style>
   #submit-btn {
+    /* display: flex;
+    align-items: center;
+    gap: 4px; */
+
     outline: none;
     transition: all 0.2s ease-in-out;
-    background-color: #b3a0f4;
+    background-color: var(--toner);
     color: var(--bg);
     border: none;
-    border-radius: 0;
+    border-radius: 0.5rem;
     position: absolute;
     right: 0;
     margin: 6px;
@@ -30,9 +34,12 @@
     font-size: 24px;
     height: 62px;
     border-top-left-radius: 0;
+    /* border-bottom-left-radius: 0; */
+
+    font-weight: 300;
 
     &:hover {
-      background-color: #d9a0f4;
+      background-color: var(--accent);
     }
   }
 
@@ -47,19 +54,27 @@
     font-size: 20px;
     padding: 24px;
     /* width: 100%; */
-    border-radius: 8px;
+    border-radius: 0.5rem;
+
     border-radius: 40px;
     min-width: 255px;
     border: 1px solid gray;
     outline: none;
     background: none;
     flex: 1 1 auto;
+    font-family: Bitter, sans-serif;
+
+    &::placeholder {
+      font-family: Bitter, sans-serif;
+      font-weight: 300;
+    }
   }
 
   @media (max-width: 764px) {
     #submit-btn {
       position: static;
       border-top-right-radius: 0;
+      border-top-left-radius: 0;
       width: 100%;
       height: 25%;
     }

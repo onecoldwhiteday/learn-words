@@ -17,7 +17,7 @@
     padding: 0;
 
     & button {
-      padding: 4px;
+      padding: 4px 24px;
       background: none;
     }
   }

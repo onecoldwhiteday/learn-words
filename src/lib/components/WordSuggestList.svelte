@@ -8,7 +8,7 @@
 {#if cardSuggestions.length}
   <div class="word-button-list-container" in:slide out:slide>
     <span class="word-button-list-description">
-      Tap or click on a(each) word to create and save as memo card. Make sure
+      Tap or click on selected word to create and save as memo card. Make sure
       you have an internet connection for that.
     </span>
     <ul class="word-list">

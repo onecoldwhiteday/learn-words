@@ -8,7 +8,7 @@
   <span>{props.definition.definition}</span>
   {#if props.definition.synonyms && props.definition.synonyms.length}
     <div class="synonym-container">
-      <span>Similar:</span>
+      <span>Similar :</span>
       {#each props.definition.synonyms as synonym}
         <Chip text={synonym} />
       {/each}
@@ -24,7 +24,7 @@
     padding: 12px 0;
     align-items: center;
     & span {
-      color: #81c995;
+      color: var(--toner);
     }
   }
 </style>

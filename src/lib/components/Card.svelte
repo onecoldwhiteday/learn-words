@@ -122,18 +122,21 @@
 
     box-sizing: border-box;
     transition: all 0.4s ease-in-out;
-    &:hover {
-      /* box-shadow: inset 0 -105px 40px -40px #d9a0f470; Mega nice */
-      box-shadow: inset 0 -26px 0 -15px #d9a0f4;
-    }
 
-    border: 1px solid #f5efe750;
+    border: 1px solid var(--text);
     background-color: var(--bg);
     border-radius: 8px;
 
     &.folded {
       max-height: 100px;
       height: 100px;
+    }
+
+    &:hover {
+      /* box-shadow: inset 0 -105px 40px -40px var(--accent); */
+      /* Mega nice */
+
+      transform: translate(-5px, -5px);
     }
 
     transition: all 0.25s ease-in-out;
@@ -184,8 +187,14 @@
     text-align: start;
 
     & .title {
-      font-weight: 900;
+      font-weight: 200;
       font-size: 32px;
+    }
+
+    &:hover .title {
+      /* box-shadow: inset 0 -105px 40px -40px #d9a0f470; Mega nice */
+      /* box-shadow: inset 0 -26px 0 -15px var(--accent); */
+      /* border-bottom: 3px dashed var(--accent); */
     }
   }
 
