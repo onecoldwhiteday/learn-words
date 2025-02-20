@@ -4,6 +4,7 @@
   import { wordData } from "../stores/store";
   import { toast } from "../stores/toast-store";
   import { slide } from "svelte/transition";
+  import Dialog from "./Dialog.svelte";
 
   let { word, removeWord, onFailToLoadWord, isOpen = false } = $props();
 
@@ -12,6 +13,8 @@
   let show = $state(true);
   let loaded = $state(false);
   let folded = $state(false);
+
+  let showDialog = $state(false);
 
   onMount(async () => {
     if (word) {
@@ -54,13 +57,20 @@
       currentWord.meanings[0]?.definitions.length > 1
     );
   };
+
+  const openDetail = () => {
+    console.log("called dialog");
+    showDialog = true;
+  };
 </script>
 
 {#if show}
+  <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions (because of reasons) -->
   <div
     in:slide
     out:slide
     class={`word-card ${folded ? "folded" : ""} ${isTall() ? "tall" : ""}`}
+    onclick={openDetail}
   >
     {#if loaded}
       <div class="card-header">
@@ -94,6 +104,7 @@
     {/if}
   </div>
 {/if}
+<Dialog data={currentWord} {showDialog} />
 
 <style>
   .card-header {
@@ -123,7 +134,7 @@
     box-sizing: border-box;
     transition: all 0.4s ease-in-out;
 
-    border: 1px solid var(--text);
+    border: 1px solid #f5efe740;
     background-color: var(--bg);
     border-radius: 8px;
 
@@ -189,12 +200,6 @@
     & .title {
       font-weight: 200;
       font-size: 32px;
-    }
-
-    &:hover .title {
-      /* box-shadow: inset 0 -105px 40px -40px #d9a0f470; Mega nice */
-      /* box-shadow: inset 0 -26px 0 -15px var(--accent); */
-      /* border-bottom: 3px dashed var(--accent); */
     }
   }
 

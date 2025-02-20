@@ -21,6 +21,8 @@
     align-items: center;
     gap: 4px; */
 
+    display: none;
+
     outline: none;
     transition: all 0.2s ease-in-out;
     background-color: var(--toner);
@@ -58,7 +60,7 @@
 
     border-radius: 40px;
     min-width: 255px;
-    border: 1px solid gray;
+    border: 1px solid #f5efe740;
     outline: none;
     background: none;
     flex: 1 1 auto;
@@ -67,11 +69,13 @@
     &::placeholder {
       font-family: Bitter, sans-serif;
       font-weight: 300;
+      color: #f5efe740;
     }
   }
 
   @media (max-width: 764px) {
     #submit-btn {
+      display: block;
       position: static;
       border-top-right-radius: 0;
       border-top-left-radius: 0;
@@ -80,6 +84,10 @@
     }
     .word-input {
       width: 100%;
+
+      &::placeholder {
+        font-size: 16px;
+      }
     }
     .word-input-container {
       display: flex;
