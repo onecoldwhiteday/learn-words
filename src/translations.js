@@ -5,7 +5,7 @@ export default {
         "lang_ru": "Russian",
         "main.title": "LEARN WORDS",
         "main.description": "Search or add a new word to learn",
-        "input.placeholder": "Type or paste a new word(s) you want to learn..."
+        "input.placeholder": "Type or paste a new word(s) you want to keep..."
     },
     ru: {
         "interface-lang": "Язык интерфейса",

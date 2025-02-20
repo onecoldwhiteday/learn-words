@@ -2,10 +2,8 @@
   import { onMount } from "svelte";
   import WordMeaning from "./WordMeaning.svelte";
   import { wordData } from "../stores/store";
-  import close from "../../assets/close.svg";
   import { toast } from "../stores/toast-store";
   import { slide } from "svelte/transition";
-  import { flip } from "svelte/animate";
 
   let { word, removeWord, onFailToLoadWord, isOpen = false } = $props();
 
@@ -14,11 +12,9 @@
   let show = $state(true);
   let loaded = $state(false);
   let folded = $state(false);
-  let cardRef;
 
   onMount(async () => {
     if (word) {
-      console.log(word);
       await loadWord(word);
     }
   });
@@ -62,7 +58,6 @@
 
 {#if show}
   <div
-    bind:this={cardRef}
     in:slide
     out:slide
     class={`word-card ${folded ? "folded" : ""} ${isTall() ? "tall" : ""}`}
@@ -71,15 +66,11 @@
       <div class="card-header">
         <span class="title">{word}</span>
         <div class="card-actions-container">
-          <button
-            aria-label="fold_button"
-            class="close-btn"
-            onclick={() => (folded = !folded)}
-          >
-            <span class="minimize-icon"></span>
-          </button>
+          <!-- svelte-ignore a11y_consider_explicit_label -->
           <button class="close-btn" onclick={() => removeWord(word)}>
-            <img src={close} alt="minimize" />
+            <div class="mdiv">
+              <div class="md"></div>
+            </div>
           </button>
         </div>
       </div>
@@ -120,20 +111,32 @@
   }
 
   .tall {
-    grid-row: span 2;
+    grid-row: span 4;
   }
 
   .word-card {
     perspective: 800px;
     position: relative;
     box-sizing: border-box;
+    height: 100%;
 
-    border: 1px solid gray;
+    box-sizing: border-box;
+    transition: all 0.4s ease-in-out;
+    &:hover {
+      /* box-shadow: inset 0 -105px 40px -40px #d9a0f470; Mega nice */
+      box-shadow: inset 0 -26px 0 -15px #d9a0f4;
+    }
+
+    border: 1px solid #f5efe750;
+    background-color: var(--bg);
+    border-radius: 8px;
 
     &.folded {
       max-height: 100px;
       height: 100px;
     }
+
+    transition: all 0.25s ease-in-out;
 
     .close-btn {
       width: 35px;
@@ -150,23 +153,27 @@
       background: none;
       border-radius: 50%;
       flex-shrink: 0;
-      filter: invert();
+      color: var(--text);
     }
 
-    .minimize-icon {
-      font-size: 32px;
-      height: 2px;
-      width: 20px;
-      place-self: center;
-      background-color: black;
-      flex-shrink: 0;
+    .mdiv {
+      height: 25px;
+      width: 2px;
+      margin-left: 12px;
+      background-color: var(--text);
+      transform: rotate(45deg);
+      z-index: 1;
     }
 
-    background-color: inherit;
+    .md {
+      height: 25px;
+      width: 2px;
+      background-color: var(--text);
+      transform: rotate(90deg);
+      z-index: 2;
+    }
 
     list-style: none;
-    font-size: 14px;
-    border-radius: 32px;
     word-wrap: break-word;
     cursor: pointer;
 

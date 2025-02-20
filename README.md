@@ -8,8 +8,8 @@ To do:
   - [ ] Import/export data
   - [ ] Interface Language
     - [ ] Add transltions
-- [ ] Check dictionary for lang support and add select input language
+- [ ] Select input language (not possible with current API)
 - [ ] Add detail card view
-  - [ ] Descktop: modal
+  - [ ] Desktop: modal
   - [ ] Touching device: fullscreen(?)
 - [x] Add notification system

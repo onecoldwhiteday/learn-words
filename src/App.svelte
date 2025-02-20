@@ -1,18 +1,16 @@
 <script>
-  import { t } from "./i18n";
   import ToastList from "./lib/components/ToastList.svelte";
   import { wordData } from "./lib/stores/store";
   import CardList from "./lib/components/CardList.svelte";
-  import { slide } from "svelte/transition";
   import WordSuggestList from "./lib/components/WordSuggestList.svelte";
   import WordInput from "./lib/components/WordInput.svelte";
-  import {toast} from "./lib/stores/toast-store.js";
+  import { toast } from "./lib/stores/toast-store.js";
 
   const segmenter = new Intl.Segmenter([], { granularity: "word" });
 
   // Controlled text input value
   let input = $state({
-    value: ''
+    value: "",
   });
 
   // Card templates, made from input
@@ -29,7 +27,7 @@
 
   $effect(() => {
     wordList = Object.keys($wordData);
-  })
+  });
 
   // Action on Card Template click, make actual card from template
   const addWord = (/** @type string */ word) => {
@@ -42,29 +40,40 @@
       return;
     }
 
-    toast.push(`The word "${word}" is already here!  🌱`, {type: 'success' })
+    toast.push(`The word "${word}" is already here!  🌱`, { type: "success" });
   };
 
   const bulkAddWords = (event) => {
-    if (event.key === "Enter") {
-    for (let w of cardTemplates) {
-      addWord(w);
+    if (event.key === "Enter" || event.target.id === "submit-btn") {
+      for (let w of cardTemplates) {
+        addWord(w);
+      }
     }
-    }
-  }
+  };
 </script>
 
+<header class="main-header"></header>
 <main class="main-container">
-  <h1 style="font-weight: 900">{$t("main.title")} ✨</h1>
-  <WordInput bind:input={input} bulkAdd={bulkAddWords} />
-  <WordSuggestList
-          addWord={addWord}
-          cardSuggestions={cardTemplates} />
-  <CardList wordList={wordList} onFailToLoadWord={() => wordList = Object.keys($wordData)} />
+  <WordInput bind:input bulkAdd={bulkAddWords} />
+  <WordSuggestList {addWord} cardSuggestions={cardTemplates} />
+  <CardList
+    {wordList}
+    onFailToLoadWord={() => (wordList = Object.keys($wordData))}
+  />
   <ToastList />
 </main>
 
 <style>
+  .main-header {
+    width: 100%;
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    display: flex;
+    justify-content: flex-end;
+    color: var(--text);
+  }
+
   .main-container {
     width: 100%;
     height: 100%;
