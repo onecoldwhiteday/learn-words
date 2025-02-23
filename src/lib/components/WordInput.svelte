@@ -60,7 +60,7 @@
 
     border-radius: 40px;
     min-width: 255px;
-    border: 1px solid #f5efe740;
+    border: 1px solid var(--divider);
     outline: none;
     background: none;
     flex: 1 1 auto;
@@ -69,7 +69,7 @@
     &::placeholder {
       font-family: Bitter, sans-serif;
       font-weight: 300;
-      color: #f5efe740;
+      color: var(--divider);
     }
   }
 

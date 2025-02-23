@@ -11,7 +11,7 @@ export default {
         "interface-lang": "Язык интерфейса",
         "lang_en": "Aнглийский",
         "lang_ru": "Русский",
-        "main.title": "СЛОВАРЬ",
+        "main.title": "Cловохранилище",
         "main.description": "Вставь или впиши слово или список слов, который хочешь запомнить",
         "input.placeholder": "Пиши тут..."
     },

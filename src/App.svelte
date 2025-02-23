@@ -54,7 +54,7 @@
 
 <header class="main-header"></header>
 <main class="main-container">
-  <h1 class="main-title">Word Cards</h1>
+  <h1 class="main-title">Word Vault</h1>
   <WordInput bind:input bulkAdd={bulkAddWords} />
   <WordSuggestList {addWord} cardSuggestions={cardTemplates} />
   <CardList

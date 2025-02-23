@@ -104,7 +104,7 @@
     {/if}
   </div>
 {/if}
-<Dialog data={currentWord} {showDialog} />
+<Dialog data={""} {showDialog} />
 
 <style>
   .card-header {
@@ -134,7 +134,7 @@
     box-sizing: border-box;
     transition: all 0.4s ease-in-out;
 
-    border: 1px solid #f5efe740;
+    border: 1px solid var(--divider);
     background-color: var(--bg);
     border-radius: 8px;
 
@@ -205,8 +205,9 @@
 
   .loader {
     display: inline-block;
-    width: 55px;
-    height: 55px;
+    place-self: center;
+    width: 110px;
+    height: 110px;
     border: 2px solid color-mix(in srgb, currentColor 50%, transparent);
     border-radius: 50%;
     border-top-color: currentColor;

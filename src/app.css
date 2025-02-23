@@ -3,6 +3,7 @@
 
 :root {
   --text: #f5efe7;
+  --divider: #f5efe740;
   --bg: #202124;
 
   color-scheme: light dark;
@@ -40,6 +41,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #f5efe7;
+    --divider: #f5efe740;
     --bg: #202124;
     --accent: yellow;
     --toner: gold;
@@ -50,6 +52,7 @@
   :root {
     --text: #202124;
     --bg: #f5efe7;
+    --divider: #20212460;
     --accent: green;
     --toner: darkgreen;
 

@@ -10,6 +10,7 @@
   });
 
   const clickOutsideCb = (e) => {
+    if (!dialog) return;
     if (!dialog.contains(e.target)) closeModal();
   };
 
